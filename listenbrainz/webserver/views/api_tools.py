@@ -328,20 +328,30 @@ def publish_data_to_queue(data, exchange, queue, error_msg):
         queue (str): the name of the queue
         error_msg (str): the error message to be returned in case of an error
     """
-    try:
-        with rabbitmq_connection._rabbitmq.get() as connection:
-            channel = connection.channel
-            channel.exchange_declare(exchange=exchange, exchange_type='fanout')
-            channel.queue_declare(queue, durable=True)
-            channel.basic_publish(
-                exchange=exchange,
-                routing_key='',
-                body=ujson.dumps(data),
-                properties=pika.BasicProperties(delivery_mode=2, ),
-            )
-    except pika.exceptions.ConnectionClosed as e:
-        current_app.logger.error("Connection to rabbitmq closed while trying to publish: %s" % str(e), exc_info=True)
-        raise APIServiceUnavailable(error_msg)
-    except Exception as e:
-        current_app.logger.error("Cannot publish to rabbitmq channel: %s / %s" % (type(e).__name__, str(e)), exc_info=True)
-        raise APIServiceUnavailable(error_msg)
+    retried = False
+    while True:
+        try:
+            with rabbitmq_connection._rabbitmq.get() as connection:
+                channel = connection.channel
+                channel.exchange_declare(exchange=exchange, exchange_type='fanout')
+                channel.queue_declare(queue, durable=True)
+                channel.basic_publish(
+                    exchange=exchange,
+                    routing_key='',
+                    body=ujson.dumps(data),
+                    properties=pika.BasicProperties(delivery_mode=2, ),
+                )
+            break
+
+        except pika.exceptions.ConnectionClosed as e:
+            if retried:
+                current_app.logger.error("Connection to rabbitmq closed while trying to publish: %s" % str(e), exc_info=True)
+                raise APIServiceUnavailable(error_msg)
+
+            current_app.logger.info("Reestablish connection to rabbitmq.")
+            rabbitmq_connection.init_rabbitmq_connection(current_app)
+            retried = True
+
+        except Exception as e:
+            current_app.logger.error("Cannot publish to rabbitmq channel: %s / %s" % (type(e).__name__, str(e)), exc_info=True)
+            raise APIServiceUnavailable(error_msg)

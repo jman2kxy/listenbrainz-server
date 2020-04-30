@@ -34,6 +34,7 @@ from py4j.protocol import Py4JJavaError
 class RequestConsumer:
 
     def get_result(self, request):
+        current_app.logger.info("Handling new query!")
         try:
             query = request['query']
             params = request.get('params', {})
@@ -120,6 +121,7 @@ class RequestConsumer:
 
                 self.result_channel = self.rabbitmq.channel()
                 self.result_channel.exchange_declare(exchange=current_app.config['SPARK_RESULT_EXCHANGE'], exchange_type='fanout')
+                current_app.logger.info("Request consumer started!")
 
                 try:
                     self.request_channel.start_consuming()

@@ -22,7 +22,20 @@ work on the project, you need to install Docker and use containers for building
 the project. Containers save you from installing all of this on your own
 workstation.
 
-See the different installation instructions for your distribution below.
+For Windows 10 users, the installation of Docker is different for Home Edition than the other editions
+due to Hyper-V not being installed with that version of the operating system.
+
+To install Docker in the following operating systems please click the respective link:
+
+- `Windows 10 Pro, Enterprise, or Education Edition <https://docs.docker.com/docker-for-windows/install/>`
+
+- `Windows 10 Home Edition <https://www.docker.com/blog/docker-desktop-for-windows-home-is-here/>`
+
+- `Mac <https://docs.docker.com/docker-for-mac/install/>`
+
+- `Linux <https://docs.docker.com/engine/install/ubuntu/>`
+
+See the different installation instructions for your distribution below after you install Docker in your machine.
 
 CentOS / RHEL
 ^^^^^^^^^^^^^

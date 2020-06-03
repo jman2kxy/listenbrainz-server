@@ -59,12 +59,12 @@ SPARK_REQUEST_EXCHANGE = "spark_request"
 SPARK_REQUEST_QUEUE = "spark_request"
 
 # MusicBrainz OAuth
-MUSICBRAINZ_CLIENT_ID = "CLIENT_ID"
-MUSICBRAINZ_CLIENT_SECRET = "CLIENT_SECRET"
+MUSICBRAINZ_CLIENT_ID = "7g0FrQtJASn1ofGX4cEr4A"
+MUSICBRAINZ_CLIENT_SECRET = "KGCJYmDxst8v3EosENiZmA"
 
 # Lastfm API
 LASTFM_API_URL = "https://ws.audioscrobbler.com/2.0/"
-LASTFM_API_KEY = "USE_LASTFM_API_KEY"
+LASTFM_API_KEY = "dd723a46be6aaf139f42eef0eabffd6b"
 
 # BigQuery support
 # Enable/disable support. If enabled, the Application Credentials must reside in
